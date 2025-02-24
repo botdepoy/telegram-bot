@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Form</h1>
+    <form id="businessForm">
+        <label for="service">Service:</label>
+        <input type="text" id="service" name="service" required>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('businessForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const service = document.getElementById('service').value;
+
+            // Get user info from Telegram
+            const userInfo = {
+                name: Telegram.WebApp.initDataUnsafe.user?.first_name || 'N/A',
+                username: Telegram.WebApp.initDataUnsafe.user?.username || 'N/A'
+            };
+
+            // Send data to the server
+            fetch('https://your-server-url.com/submit-form', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    user_info: userInfo,
+                    service: service
+                })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Form submitted successfully!');
+                    Telegram.WebApp.close();  // Close the mini app after submission
+                } else {
+                    alert('Failed to submit form.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
